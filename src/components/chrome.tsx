@@ -108,6 +108,7 @@ export function GlassNavbar({
                   { href: "/programs/children", en: "Programs for Children", ar: "برامج الأطفال" },
                   { href: "/programs/adults", en: "Programs for Adults", ar: "برامج الكبار" },
                   { href: "/programs/converts", en: "Programs for Converts", ar: "برامج المسلمين الجدد" },
+                  { href: "/programs/families", en: "Programs for Families", ar: "برامج العائلات" },
                 ].map((a) => (
                   <Link key={a.href} href={a.href} className="block rounded-xl px-3 py-2 hover:bg-white" onClick={() => setDrop(false)}>
                     {pick(lang, a)}
@@ -197,7 +198,7 @@ export function Footer({
             <li><Link href="/about" className="hover:underline">{t(lang, "nav.about")}</Link></li>
             <li><Link href="/teachers" className="hover:underline">{t(lang, "nav.teachers")}</Link></li>
             <li><Link href="/approach" className="hover:underline">{t(lang, "nav.approach")}</Link></li>
-            <li><Link href="/how-it-works" className="hover:underline">How It Works</Link></li>
+            <li><Link href="/how-it-works" className="hover:underline">{lang === "ar" ? "كيف نعمل" : "How It Works"}</Link></li>
             <li><Link href="/blog" className="hover:underline">{t(lang, "nav.blog")}</Link></li>
             <li><Link href="/faq" className="hover:underline">FAQ</Link></li>
           </ul>
@@ -208,6 +209,8 @@ export function Footer({
             <li><Link href="/privacy" className="hover:underline">Privacy Policy</Link></li>
             <li><Link href="/terms" className="hover:underline">Terms & Conditions</Link></li>
             <li><Link href="/safeguarding" className="hover:underline">Safeguarding</Link></li>
+            <li><Link href="/cancellation" className="hover:underline">{lang === "ar" ? "سياسة الإلغاء" : "Cancellation Policy"}</Link></li>
+            <li><Link href="/complaints" className="hover:underline">{lang === "ar" ? "الشكاوى" : "Complaints"}</Link></li>
             <li><Link href="/accessibility" className="hover:underline">Accessibility</Link></li>
             <li><Link href="/contact" className="hover:underline">{t(lang, "nav.contact")}</Link></li>
             <li><Link href="/book-assessment" className="hover:underline">{t(lang, "nav.book")}</Link></li>

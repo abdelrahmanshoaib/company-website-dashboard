@@ -103,7 +103,7 @@ export default async function HomePage() {
         <SectionHeading eyebrow={lang === "ar" ? "لمن؟" : "WHO WE SERVE"} title={pick(lang, home.audienceTitle)} />
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {home.audiences.map((a) => (
-            <Link key={a.slug} href={a.slug === "families" ? "/book-assessment" : `/programs/${a.slug}`} className="glass glass-card block p-6">
+            <Link key={a.slug} href={`/programs/${a.slug}`} className="glass glass-card block p-6">
               <span className="text-3xl" aria-hidden>{a.icon}</span>
               <h3 className="font-display mt-3 text-lg font-bold">{pick(lang, a.title)}</h3>
               <p className="mt-2 text-sm text-[var(--color-muted)]">{pick(lang, a.body)}</p>

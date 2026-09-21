@@ -191,6 +191,20 @@ export const audiences: Record<string, { title: Bilingual; intro: Bilingual; bul
     ],
     cta: { en: "Start Your Journey", ar: "ابدأ رحلتك" },
   },
+  families: {
+    title: { en: "Programs for Muslim Families", ar: "برامج العائلات المسلمة" },
+    intro: {
+      en: "One place for the whole household: children's lessons, parents' learning, and a shared routine the family can keep.",
+      ar: "مكان واحد لجميع أفراد الأسرة: دروس الأطفال وتعلم الوالدين وروتين مشترك يمكن للعائلة الالتزام به.",
+    },
+    bullets: [
+      { en: "Children's Quran reading, Hifz, and manners tracks", ar: "مسارات قراءة القرآن والحفظ والآداب للأطفال" },
+      { en: "Parents' Tajweed and Arabic options alongside", ar: "خيارات التجويد والعربية لأولياء الأمور بالتوازي" },
+      { en: "Coordinated schedules to reduce weekly hassle", ar: "مواعيد منسقة لتقليل عناء الأسبوع" },
+      { en: "One progress report covering every child", ar: "تقرير تقدم واحد يغطي كل طفل" },
+    ],
+    cta: { en: "Plan Family Learning", ar: "خطط لتعلم عائلتك" },
+  },
 };
 
 export const seoPages: Record<string, { title: Bilingual; intro: Bilingual; sections: { h: Bilingual; p: Bilingual }[] }> = {

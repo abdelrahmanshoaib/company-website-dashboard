@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { AcademyDb } from "./academy";
 import { seedDatabase } from "./seed";
+import { seedPages } from "./seed-legal";
 
 // Writable location for the JSON database.
 // - Local dev: ./data/academy.db.json
@@ -41,6 +42,25 @@ export async function readDb(): Promise<AcademyDb> {
     await ensureFile();
     const raw = await fs.readFile(DB_PATH, "utf-8");
     cache = JSON.parse(raw) as AcademyDb;
+    // Migrate: add seed pages missing from older databases (never overwrite).
+    let migrated = false;
+    for (const p of seedPages) {
+      if (!cache.pages.some((x) => x.slug === p.slug)) {
+        cache.pages.push(p);
+        migrated = true;
+      }
+    }
+    if (!cache.settings.timeZones?.length) {
+      cache.settings.timeZones = seedDatabase().settings.timeZones;
+      migrated = true;
+    }
+    if (migrated) {
+      try {
+        await fs.writeFile(DB_PATH, JSON.stringify(cache, null, 2), "utf-8");
+      } catch {
+        // read-only FS — merged copy stays in memory for this instance
+      }
+    }
     return cache;
   } catch {
     // Read-only filesystem or any FS failure → serve seeded in-memory DB.

@@ -75,5 +75,39 @@ export const seedPages: PageDoc[] = [
     updatedAt: now,
     updatedBy: by,
   },
+  {
+    id: "page_cancellation",
+    slug: "cancellation",
+    title: { en: "Cancellation & Rescheduling Policy", ar: "سياسة الإلغاء وإعادة الجدولة" },
+    metaTitle: { en: "Cancellation & Rescheduling Policy", ar: "سياسة الإلغاء وإعادة الجدولة" },
+    metaDescription: {
+      en: "How lesson cancellations, rescheduling, and refunds are handled.",
+      ar: "كيف نتعامل مع إلغاء الدروس وإعادة جدولتها واسترداد الرسوم.",
+    },
+    content: {
+      en: "Administrator notice: starter template — complete notice periods and refund terms before publishing as final.\n\nLife happens. If you need to cancel or reschedule a lesson, inform us as early as possible through your usual contact channel.\n\nRequests made with reasonable notice are rescheduled at no extra charge. Repeated last-minute cancellations may affect scheduling priority.\n\nWhere fees were paid in advance, unused lessons are handled fairly: rescheduled first, and refunded where rescheduling is not possible, according to the terms agreed at enrollment.\n\nAssessment appointments that cannot be kept should be cancelled so the slot can go to another student.",
+      ar: "تنبيه للإدارة: صيغة أولية — أكملوا مدد الإشعار وشروط الاسترداد قبل اعتمادها نهائيًا.\n\nقد تطرأ ظروف. إذا احتجت لإلغاء درس أو إعادة جدولته، أبلغنا مبكرًا قدر الإمكان عبر قناة التواصل المعتادة.\n\nالطلبات المُبلغ عنها بإشعار معقول تُعاد جدولتها دون رسوم إضافية. أما الإلغاءات المتكررة في اللحظة الأخيرة فقد تؤثر على أولوية المواعيد.\n\nعند دفع الرسوم مقدمًا، تُعالج الدروس غير المستخدمة بعدالة: تُعاد جدولتها أولًا، وتُسترد قيمتها عند تعذر ذلك، وفق الشروط المتفق عليها عند التسجيل.\n\nمواعيد التقييم التي يتعذر الالتزام بها يجب إلغاؤها ليستفيد منها طالب آخر.",
+    },
+    status: "published",
+    updatedAt: now,
+    updatedBy: by,
+  },
+  {
+    id: "page_complaints",
+    slug: "complaints",
+    title: { en: "Contact & Complaints", ar: "التواصل والشكاوى" },
+    metaTitle: { en: "Contact & Complaints", ar: "التواصل والشكاوى" },
+    metaDescription: {
+      en: "How to reach us and how complaints are handled.",
+      ar: "كيف تصل إلينا وكيف نتعامل مع الشكاوى.",
+    },
+    content: {
+      en: "Administrator notice: starter template — set the complaints contact and response times before publishing as final.\n\nWe take concerns seriously. If something is wrong with your lessons, scheduling, billing, or conduct, tell us and we will investigate.\n\nHow to complain: send a message through the Contact page with the word COMPLAINT, including what happened, when, and who was involved.\n\nWhat happens next: we acknowledge your complaint, look into it fairly, and respond with findings and next steps. Safeguarding concerns follow the safeguarding process and may be escalated to the appropriate authorities.\n\nIf you remain dissatisfied, you may ask for your case to be reviewed by academy management.",
+      ar: "تنبيه للإدارة: صيغة أولية — حددوا جهة استقبال الشكاوى ومدد الرد قبل اعتمادها نهائيًا.\n\nنأخذ المخاوف بجدية. إذا حدث خطأ في الدروس أو المواعيد أو الفواتير أو السلوك، أخبرنا وسنحقق في الأمر.\n\nكيفية الشكوى: أرسل رسالة عبر صفحة التواصل بكلمة شكوى، موضحًا ما حدث ومتى ومن المعنيون.\n\nماذا بعد: نؤكد استلام شكواك ونحقق فيها بعدالة ونرد عليك بالنتائج والخطوات التالية. مخاوف الحماية تتبع مسار الحماية وقد تُرفع للجهات المختصة.\n\nإذا بقيت غير راضٍ، يمكنك طلب مراجعة قضيتك من إدارة الأكاديمية.",
+    },
+    status: "published",
+    updatedAt: now,
+    updatedBy: by,
+  },
 ];
 

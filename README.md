@@ -27,9 +27,9 @@ Open `http://localhost:3000` (default language: English, switch to عربي from
 - Sections: Overview, Pages, Services, Teachers, FAQs, Blog, Media Library, Assessment Requests (CRM), Site Settings, Users & Roles, Activity Log
 - Roles: `super_admin`, `content_manager`, `admissions`, `academic_manager` (permissions enforced by the backend)
 
-## Public pages (29)
+## Public pages (32)
 
-Home, About, 6 service pages, Children/Adults/Converts programs, How It Works, Teachers, Learning Approach, FAQ, Contact, Book a Free Assessment, Blog + articles, Privacy, Terms, Safeguarding, Accessibility, Student Login (integration-ready notice + working links), generic CMS pages (`/p/[slug]`), 4 SEO landing pages (`/online-quran-classes-uk`, `-canada`, `-for-kids`, `-for-adults`).
+Home, About, 6 service pages, Children/Adults/Converts/Families programs, How It Works, Teachers, Learning Approach, FAQ, Contact, Book a Free Assessment, Blog + articles, Privacy, Terms, Safeguarding, Accessibility, Cancellation, Complaints, Student Login (integration-ready notice + working links), Admin Login + Password Reset, generic CMS pages (`/p/[slug]`), 4 SEO landing pages (`/online-quran-classes-uk`, `-canada`, `-for-kids`, `-for-adults`).
 
 ## Deploying (Vercel)
 

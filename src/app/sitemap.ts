@@ -4,7 +4,8 @@ import { readDb } from "@/lib/db";
 const STATIC = [
   "", "/about", "/approach", "/how-it-works", "/teachers", "/faq", "/contact",
   "/book-assessment", "/blog", "/privacy", "/terms", "/safeguarding", "/accessibility",
-  "/programs/children", "/programs/adults", "/programs/converts",
+  "/cancellation", "/complaints",
+  "/programs/children", "/programs/adults", "/programs/converts", "/programs/families",
   "/online-quran-classes-uk", "/online-quran-classes-canada",
   "/online-quran-classes-for-kids", "/online-quran-classes-for-adults",
   "/student/login",

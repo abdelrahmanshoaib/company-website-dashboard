@@ -47,6 +47,9 @@ function Form() {
           {error && <p className="text-sm text-red-700" role="alert">{error}</p>}
           <button className="btn-primary w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
         </form>
+        <p className="mt-4 text-center text-sm text-[var(--color-muted)]">
+          Have a reset token? <a href="/admin/reset" className="font-bold text-[var(--color-primary)]">Set a new password</a>
+        </p>
       </div>
     </div>
   );
