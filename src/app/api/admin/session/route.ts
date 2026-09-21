@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { readDb, writeDb, logActivity } from "@/lib/db";
-import { verifyPassword, createSession, SESSION_COOKIE, destroySession } from "@/lib/auth";
+import { verifyPassword, signSession, SESSION_COOKIE, destroySession } from "@/lib/auth";
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   if (!user.active) {
     return NextResponse.json({ error: "This account is deactivated." }, { status: 403 });
   }
-  const token = await createSession(user.id);
+  const token = signSession(user.id);
   const fresh = await readDb();
   await logActivity(fresh, user.email, "login", "session", user.id);
   await writeDb(fresh);

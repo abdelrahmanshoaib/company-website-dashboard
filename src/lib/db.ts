@@ -6,9 +6,12 @@ import { seedPages } from "./seed-legal";
 
 // Writable location for the JSON database.
 // - Local dev: ./data/academy.db.json
-// - Vercel / serverless: the filesystem is read-only except /tmp, so we fall
-//   back to /tmp (ephemeral — use ACADEMY_DB_DIR or Postgres for persistence).
-//   NOTE: on serverless, data resets between deployments/instances.
+// - Vercel / serverless: /tmp (ephemeral — use ACADEMY_DB_DIR or Postgres for persistence).
+//
+// IMPORTANT: no module-level cache. Turbopack may bundle separate copies of
+// this module per route, so cached state would diverge between API routes
+// and layouts. Every read hits the disk (cheap for this file size), which is
+// always consistent within an instance.
 function resolveDbPath(): string {
   if (process.env.ACADEMY_DB_DIR) {
     return path.join(process.env.ACADEMY_DB_DIR, "academy.db.json");
@@ -21,9 +24,8 @@ function resolveDbPath(): string {
 
 const DB_PATH = resolveDbPath();
 
-let cache: AcademyDb | null = null;
-// If the primary path is not writable (e.g. read-only serverless FS),
-// fall back to an in-memory seeded database so the site still renders.
+// Last-resort in-memory copy when the disk is not writable at all.
+// Only used for rendering; admin writes still apply to it for this chunk.
 let memoryFallback: AcademyDb | null = null;
 
 async function ensureFile(): Promise<void> {
@@ -35,53 +37,49 @@ async function ensureFile(): Promise<void> {
   }
 }
 
+function migrate(db: AcademyDb): boolean {
+  let migrated = false;
+  for (const p of seedPages) {
+    if (!db.pages.some((x) => x.slug === p.slug)) {
+      db.pages.push(p);
+      migrated = true;
+    }
+  }
+  if (!db.settings.timeZones?.length) {
+    db.settings.timeZones = seedDatabase().settings.timeZones;
+    migrated = true;
+  }
+  return migrated;
+}
+
 export async function readDb(): Promise<AcademyDb> {
-  if (cache) return cache;
-  if (memoryFallback) return memoryFallback;
   try {
     await ensureFile();
     const raw = await fs.readFile(DB_PATH, "utf-8");
-    cache = JSON.parse(raw) as AcademyDb;
-    // Migrate: add seed pages missing from older databases (never overwrite).
-    let migrated = false;
-    for (const p of seedPages) {
-      if (!cache.pages.some((x) => x.slug === p.slug)) {
-        cache.pages.push(p);
-        migrated = true;
-      }
-    }
-    if (!cache.settings.timeZones?.length) {
-      cache.settings.timeZones = seedDatabase().settings.timeZones;
-      migrated = true;
-    }
-    if (migrated) {
+    const db = JSON.parse(raw) as AcademyDb;
+    if (migrate(db)) {
       try {
-        await fs.writeFile(DB_PATH, JSON.stringify(cache, null, 2), "utf-8");
+        await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
       } catch {
-        // read-only FS — merged copy stays in memory for this instance
+        // read-only FS — merged copy is still returned for this request
       }
     }
-    return cache;
+    return db;
   } catch {
-    // Read-only filesystem or any FS failure → serve seeded in-memory DB.
-    memoryFallback = seedDatabase();
+    if (!memoryFallback) memoryFallback = seedDatabase();
     return memoryFallback;
   }
 }
 
 export async function writeDb(db: AcademyDb): Promise<void> {
-  cache = db;
-  if (memoryFallback) {
-    // No writable disk: keep serving the in-memory copy for this instance.
-    memoryFallback = db;
-    return;
-  }
   try {
     await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
     const tmp = `${DB_PATH}.tmp`;
     await fs.writeFile(tmp, JSON.stringify(db, null, 2), "utf-8");
     await fs.rename(tmp, DB_PATH);
+    memoryFallback = null;
   } catch {
+    // No writable disk: keep serving the updated copy in memory.
     memoryFallback = db;
   }
 }

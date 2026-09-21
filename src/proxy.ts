@@ -6,7 +6,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasSession = Boolean(request.cookies.get("academy_admin_session")?.value);
 
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login" && !hasSession) {
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login" && pathname !== "/admin/reset" && !hasSession) {
     const url = new URL("/admin/login", request.url);
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
