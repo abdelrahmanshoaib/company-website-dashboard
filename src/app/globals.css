@@ -1,5 +1,140 @@
 @import "tailwindcss";
 
+/* Central theme — editable from Admin → Site Settings (colors saved to DB,
+   mirrored here as CSS variables for global use). */
+:root {
+  --color-primary: #56308f;
+  --color-violet: #7045b5;
+  --color-lavender: #dccbfa;
+  --color-coral: #ff8062;
+  --color-gold: #d9b56d;
+  --color-ink: #1e1b26;
+  --color-muted: #6b6577;
+  --color-paper: #faf8ff;
+  --color-card: #ffffff;
+}
+
+@theme inline {
+  --font-display: var(--font-display), Georgia, serif;
+  --font-sans: var(--font-body), var(--font-arabic), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: system-ui, "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: var(--font-body), var(--font-arabic), system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 500px at 85% -10%, color-mix(in srgb, var(--color-lavender) 45%, transparent), transparent),
+    radial-gradient(900px 420px at 5% 10%, color-mix(in srgb, var(--color-coral) 14%, transparent), transparent),
+    var(--color-paper);
+  color: var(--color-ink);
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-arabic), var(--font-body), system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-arabic), Georgia, serif;
+}
+
+/* Glassmorphism primitives */
+.glass {
+  background: color-mix(in srgb, #ffffff 72%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid color-mix(in srgb, #ffffff 65%, var(--color-lavender));
+  box-shadow: 0 12px 40px -18px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+.glass-dark {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 92%, black), var(--color-violet));
+  color: #fff;
+  border: 1px solid color-mix(in srgb, #ffffff 22%, transparent);
+  box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+.glass-card {
+  border-radius: 1.25rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.9rem;
+  padding: 0.8rem 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-violet));
+  box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--color-primary) 65%, transparent);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.9rem;
+  padding: 0.8rem 1.6rem;
+  font-weight: 700;
+  border: 1.5px solid color-mix(in srgb, var(--color-primary) 45%, transparent);
+  color: var(--color-primary);
+  background: color-mix(in srgb, #ffffff 70%, transparent);
+}
+
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--color-lavender) 35%, white);
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #ddd7ee;
+  background: #fff;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.input:focus {
+  outline: 2px solid var(--color-violet);
+  outline-offset: 1px;
+  border-color: var(--color-violet);
+}
+
+.label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .glass-card {
+    transition: none;
+  }
+  .glass-card:hover {
+    transform: none;
+  }
 }

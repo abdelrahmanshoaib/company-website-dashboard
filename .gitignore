@@ -11,3 +11,7 @@ npm-debug.log*
 .env*
 !.env.example
 .vercel
+# runtime database (seeded automatically on first run) + uploads
+/data/academy.db.json
+/data/academy.db.json.tmp
+/public/uploads/*
