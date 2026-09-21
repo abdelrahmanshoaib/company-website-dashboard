@@ -31,6 +31,14 @@ Open `http://localhost:3000` (default language: English, switch to عربي from
 
 Home, About, 6 service pages, Children/Adults/Converts programs, How It Works, Teachers, Learning Approach, FAQ, Contact, Book a Free Assessment, Blog + articles, Privacy, Terms, Safeguarding, Accessibility, Student Login (integration-ready notice + working links), generic CMS pages (`/p/[slug]`), 4 SEO landing pages (`/online-quran-classes-uk`, `-canada`, `-for-kids`, `-for-adults`).
 
+## Deploying (Vercel)
+
+Works out of the box. Note: serverless filesystems are read-only, so the JSON
+database runs **ephemerally** (resets on redeploy/scale). For persistent data,
+set `ACADEMY_DB_DIR` to a writable volume, or migrate to Postgres/Supabase.
+
+Health check: `/api/health`.
+
 ## Notes
 
 - Teacher profiles ship as **clearly-marked samples** — replace in Admin → Teachers.

@@ -3,9 +3,27 @@ import path from "node:path";
 import type { AcademyDb } from "./academy";
 import { seedDatabase } from "./seed";
 
-const DB_PATH = path.join(process.cwd(), "data", "academy.db.json");
+// Writable location for the JSON database.
+// - Local dev: ./data/academy.db.json
+// - Vercel / serverless: the filesystem is read-only except /tmp, so we fall
+//   back to /tmp (ephemeral — use ACADEMY_DB_DIR or Postgres for persistence).
+//   NOTE: on serverless, data resets between deployments/instances.
+function resolveDbPath(): string {
+  if (process.env.ACADEMY_DB_DIR) {
+    return path.join(process.env.ACADEMY_DB_DIR, "academy.db.json");
+  }
+  if (process.env.VERCEL) {
+    return path.join("/tmp", "academy-data", "academy.db.json");
+  }
+  return path.join(process.cwd(), "data", "academy.db.json");
+}
+
+const DB_PATH = resolveDbPath();
 
 let cache: AcademyDb | null = null;
+// If the primary path is not writable (e.g. read-only serverless FS),
+// fall back to an in-memory seeded database so the site still renders.
+let memoryFallback: AcademyDb | null = null;
 
 async function ensureFile(): Promise<void> {
   try {
@@ -18,18 +36,34 @@ async function ensureFile(): Promise<void> {
 
 export async function readDb(): Promise<AcademyDb> {
   if (cache) return cache;
-  await ensureFile();
-  const raw = await fs.readFile(DB_PATH, "utf-8");
-  cache = JSON.parse(raw) as AcademyDb;
-  return cache;
+  if (memoryFallback) return memoryFallback;
+  try {
+    await ensureFile();
+    const raw = await fs.readFile(DB_PATH, "utf-8");
+    cache = JSON.parse(raw) as AcademyDb;
+    return cache;
+  } catch {
+    // Read-only filesystem or any FS failure → serve seeded in-memory DB.
+    memoryFallback = seedDatabase();
+    return memoryFallback;
+  }
 }
 
 export async function writeDb(db: AcademyDb): Promise<void> {
   cache = db;
-  await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-  const tmp = `${DB_PATH}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(db, null, 2), "utf-8");
-  await fs.rename(tmp, DB_PATH);
+  if (memoryFallback) {
+    // No writable disk: keep serving the in-memory copy for this instance.
+    memoryFallback = db;
+    return;
+  }
+  try {
+    await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
+    const tmp = `${DB_PATH}.tmp`;
+    await fs.writeFile(tmp, JSON.stringify(db, null, 2), "utf-8");
+    await fs.rename(tmp, DB_PATH);
+  } catch {
+    memoryFallback = db;
+  }
 }
 
 export function uid(prefix = "id"): string {

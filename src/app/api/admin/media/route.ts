@@ -29,10 +29,19 @@ export async function POST(req: Request) {
   }
   const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80);
   const fileName = `${Date.now()}_${safe}`;
-  const dir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(dir, { recursive: true });
-  const buf = Buffer.from(await file.arrayBuffer());
-  await fs.writeFile(path.join(dir, fileName), buf);
+  const dir = process.env.VERCEL
+    ? path.join("/tmp", "academy-data", "uploads")
+    : path.join(process.cwd(), "public", "uploads");
+  try {
+    await fs.mkdir(dir, { recursive: true });
+    const buf = Buffer.from(await file.arrayBuffer());
+    await fs.writeFile(path.join(dir, fileName), buf);
+  } catch {
+    return NextResponse.json(
+      { error: "Uploads are not writable on this hosting plan. Configure external object storage." },
+      { status: 503 }
+    );
+  }
 
   const db = await readDb();
   const doc = {
