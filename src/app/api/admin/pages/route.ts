@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readDb, writeDb, uid, logActivity } from "@/lib/db";
 import { requireUser, requirePerm } from "@/lib/api-auth";
+import { syncMetaTitle } from "@/lib/sanitize";
 import type { PageDoc } from "@/lib/academy";
 
 export async function GET() {
@@ -46,10 +47,17 @@ export async function PUT(req: Request) {
   const db = await readDb();
   const page = db.pages.find((p) => p.id === body.id);
   if (!page) return NextResponse.json({ error: "Page not found." }, { status: 404 });
-  for (const k of ["title", "metaTitle", "metaDescription", "content"] as const) {
+  for (const k of ["metaDescription", "content"] as const) {
     if (body[k]) {
       page[k] = { en: body[k].en ?? page[k].en, ar: body[k].ar ?? page[k].ar };
     }
+  }
+  if (body.title || body.metaTitle) {
+    const oldTitle = { ...page.title };
+    if (body.title) {
+      page.title = { en: body.title.en ?? page.title.en, ar: body.title.ar ?? page.title.ar };
+    }
+    page.metaTitle = syncMetaTitle(page.metaTitle, oldTitle, body.title, body.metaTitle);
   }
   if (body.status) page.status = body.status;
   if (body.slug) page.slug = String(body.slug).toLowerCase().replace(/[^a-z0-9-]/g, "-");

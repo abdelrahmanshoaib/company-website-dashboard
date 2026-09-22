@@ -30,6 +30,27 @@ export function splitBlocks(text: string): ContentBlock[] {
   return blocks.filter((b) => b.type === "embed" || b.text.trim().length > 0);
 }
 
+// If a title was edited but its SEO meta title was never customized
+// (still equals the old title), keep it in sync automatically.
+// Returns the merged {en, ar} value.
+export function syncMetaTitle(
+  storedMeta: { en: string; ar: string },
+  oldTitle: { en: string; ar: string },
+  newTitle: { en: string; ar: string } | undefined,
+  incomingMeta: { en?: string; ar?: string } | undefined
+): { en: string; ar: string } {
+  const next = { ...storedMeta };
+  if (incomingMeta?.en !== undefined) next.en = incomingMeta.en;
+  if (incomingMeta?.ar !== undefined) next.ar = incomingMeta.ar;
+  if (newTitle?.en && newTitle.en !== oldTitle.en) {
+    if (!incomingMeta?.en && storedMeta.en === oldTitle.en) next.en = newTitle.en;
+  }
+  if (newTitle?.ar !== undefined && newTitle.ar !== oldTitle.ar) {
+    if (incomingMeta?.ar === undefined && storedMeta.ar === oldTitle.ar) next.ar = newTitle.ar;
+  }
+  return next;
+}
+
 export function sanitizeEmbed(html: string): string {
   let out = html;
   // Unwrap full pasted documents — keep body content only.

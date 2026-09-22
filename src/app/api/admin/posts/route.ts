@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readDb, writeDb, uid, logActivity } from "@/lib/db";
 import { requireUser, requirePerm } from "@/lib/api-auth";
+import { syncMetaTitle } from "@/lib/sanitize";
 import type { PostDoc } from "@/lib/academy";
 
 export async function GET() {
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
     status: body.status ?? "draft",
     publishedAt: body.status === "published" ? now : null,
     metaTitle: { en: body.metaTitle?.en ?? body.title.en, ar: body.metaTitle?.ar ?? "" },
-    metaDescription: { en: body.metaDescription?.en ?? "", ar: body.metaDescription?.ar ?? "" },
+    metaDescription: { en: body.metaDescription?.en ?? body.excerpt?.en ?? "", ar: body.metaDescription?.ar ?? body.excerpt?.ar ?? "" },
     updatedAt: now,
   };
   db.posts.push(post);
@@ -50,8 +51,13 @@ export async function PUT(req: Request) {
   const db = await readDb();
   const doc = db.posts.find((x) => x.id === body.id);
   if (!doc) return NextResponse.json({ error: "Article not found." }, { status: 404 });
-  for (const k of ["title", "excerpt", "content", "metaTitle", "metaDescription"] as const) {
+  for (const k of ["excerpt", "content", "metaDescription"] as const) {
     if (body[k]) doc[k] = { en: body[k].en ?? doc[k].en, ar: body[k].ar ?? doc[k].ar };
+  }
+  if (body.title || body.metaTitle) {
+    const oldTitle = { ...doc.title };
+    if (body.title) doc.title = { en: body.title.en ?? doc.title.en, ar: body.title.ar ?? doc.title.ar };
+    doc.metaTitle = syncMetaTitle(doc.metaTitle, oldTitle, body.title, body.metaTitle);
   }
   if (body.category !== undefined) doc.category = String(body.category);
   if (body.author !== undefined) doc.author = String(body.author);

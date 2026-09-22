@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readDb, writeDb, uid, logActivity } from "@/lib/db";
 import { requireUser, requirePerm } from "@/lib/api-auth";
+import { syncMetaTitle } from "@/lib/sanitize";
 import type { ServiceDoc } from "@/lib/academy";
 
 const bi = (v: unknown, fallback = "") => ({
@@ -59,8 +60,13 @@ export async function PUT(req: Request) {
   const db = await readDb();
   const svc = db.services.find((s) => s.id === body.id);
   if (!svc) return NextResponse.json({ error: "Service not found." }, { status: 404 });
-  for (const k of ["name", "short", "content", "metaTitle", "metaDescription"] as const) {
+  for (const k of ["short", "content", "metaDescription"] as const) {
     if (body[k]) svc[k] = { en: body[k].en ?? svc[k].en, ar: body[k].ar ?? svc[k].ar };
+  }
+  if (body.name || body.metaTitle) {
+    const oldName = { ...svc.name };
+    if (body.name) svc.name = { en: body.name.en ?? svc.name.en, ar: body.name.ar ?? svc.name.ar };
+    svc.metaTitle = syncMetaTitle(svc.metaTitle, oldName, body.name, body.metaTitle);
   }
   for (const k of ["outcomes", "audience", "curriculum"] as const) {
     if (body[k]) svc[k] = biList(body[k]);
