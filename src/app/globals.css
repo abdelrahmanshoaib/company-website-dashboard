@@ -127,6 +127,14 @@ html[lang="ar"] body {
   outline-offset: 2px;
 }
 
+/* Fenced ```embed blocks pasted from the CMS (ad code, widgets).
+   The embed keeps its own <style>; the wrapper only contains it. */
+.embed-block {
+  isolation: isolate;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

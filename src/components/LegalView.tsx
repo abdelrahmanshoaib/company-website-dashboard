@@ -1,5 +1,6 @@
 import SiteShell from "@/components/SiteShell";
-import { Breadcrumbs, Paragraphs } from "@/components/sections";
+import { Breadcrumbs } from "@/components/sections";
+import { RichContent } from "@/components/RichContent";
 import { getPageBySlug } from "@/lib/site";
 import { getLang, pick } from "@/lib/lang";
 import { t } from "@/lib/i18n";
@@ -22,7 +23,7 @@ export default async function LegalView({ slug }: { slug: string }) {
       <article className="mx-auto max-w-3xl">
         <h1 className="font-display text-3xl font-bold md:text-5xl">{pick(lang, page.title)}</h1>
         <div className="glass mt-8 rounded-3xl p-7 md:p-10">
-          <Paragraphs text={pick(lang, page.content)} />
+          <RichContent text={pick(lang, page.content)} />
         </div>
       </article>
     </SiteShell>

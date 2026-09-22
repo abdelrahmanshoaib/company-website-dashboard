@@ -83,6 +83,9 @@ export default function PagesAdmin() {
           </div>
           <BiField label="Title" value={editing.title} onChange={(v) => setEditing({ ...editing, title: v })} />
           <BiField label="Content (blank line = new paragraph)" textarea rows={8} value={editing.content} onChange={(v) => setEditing({ ...editing, content: v })} />
+          <p className="rounded-xl bg-purple-50 px-4 py-2 text-xs text-[var(--color-muted)]">
+            To embed ad/HTML code with its own styling, wrap it in fenced blocks: <code dir="ltr">```embed</code> …your HTML + <code dir="ltr">&lt;style&gt;</code>… <code dir="ltr">```</code>. Scripts are stripped for security.
+          </p>
           <BiField label="Meta title (SEO)" value={editing.metaTitle} onChange={(v) => setEditing({ ...editing, metaTitle: v })} />
           <BiField label="Meta description (SEO)" textarea rows={2} value={editing.metaDescription} onChange={(v) => setEditing({ ...editing, metaDescription: v })} />
           <div className="flex gap-2">

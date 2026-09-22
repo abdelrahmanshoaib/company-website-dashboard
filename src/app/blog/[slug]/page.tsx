@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteShell from "@/components/SiteShell";
-import { Breadcrumbs, CTASection, Paragraphs } from "@/components/sections";
+import { Breadcrumbs, CTASection } from "@/components/sections";
+import { RichContent } from "@/components/RichContent";
 import { readDb } from "@/lib/db";
 import { getLang, pick } from "@/lib/lang";
 import { home } from "@/lib/content";
@@ -42,7 +43,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
         <h1 className="font-display mt-3 text-3xl font-bold md:text-5xl">{pick(lang, post.title)}</h1>
         <p className="mt-4 text-lg text-[var(--color-muted)]">{pick(lang, post.excerpt)}</p>
         <div className="glass mt-8 rounded-3xl p-7 md:p-10">
-          <Paragraphs text={pick(lang, post.content)} />
+          <RichContent text={pick(lang, post.content)} />
         </div>
         {post.tags.length > 0 && (
           <p className="mt-6 text-sm text-[var(--color-muted)]">#{post.tags.join("  #")}</p>

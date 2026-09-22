@@ -39,6 +39,21 @@ set `ACADEMY_DB_DIR` to a writable volume, or migrate to Postgres/Supabase.
 
 Health check: `/api/health`.
 
+## Authoring embed/ad code
+
+In Blog and Pages content, paste HTML + `<style>` ad code inside fenced blocks:
+
+````text
+```embed
+<div class="my-ad">...</div>
+<style>.my-ad { ... }</style>
+```
+````
+
+The embed renders with its full styling. For security, `<script>`, event
+attributes (`onclick=…`), `javascript:` URLs, meta refresh and `<base>` are
+stripped; iframes are forced into sandbox mode.
+
 ## Notes
 
 - Teacher profiles ship as **clearly-marked samples** — replace in Admin → Teachers.

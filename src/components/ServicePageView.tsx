@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import { Breadcrumbs, CTASection, Eyebrow, FAQAccordion } from "@/components/sections";
+import { RichContent } from "@/components/RichContent";
 import { pick } from "@/lib/lang";
 import type { Lang, ServiceDoc } from "@/lib/academy";
 import { t } from "@/lib/i18n";
@@ -24,7 +25,9 @@ export default function ServicePageView({
       <header className="glass-dark rounded-3xl px-6 py-12 md:px-12">
         <Eyebrow><span className="text-[var(--color-gold)]">{L("OUR PROGRAMS", "برامجنا")}</span></Eyebrow>
         <h1 className="font-display mt-3 max-w-3xl text-3xl font-bold md:text-5xl">{pick(lang, service.name)}</h1>
-        <p className="mt-4 max-w-2xl text-lg opacity-90">{pick(lang, service.content)}</p>
+        <div className="mt-4 max-w-2xl text-lg opacity-90 [&_p]:mt-3 [&_p]:!text-white/90 [&_p]:!leading-relaxed">
+          <RichContent text={pick(lang, service.content)} />
+        </div>
         <Link href="/book-assessment" className="btn-primary mt-8 !bg-white !text-[var(--color-primary)]">
           {t(lang, "common.book_assessment")}
         </Link>
